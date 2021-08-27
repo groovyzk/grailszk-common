@@ -31,7 +31,6 @@ import java.io.StringReader;
 import java.io.InputStream;
 import java.util.Map;
 import java.net.URI;
-import org.springframework.core.io.Resource;
 import java.io.FileNotFoundException;
 import org.springframework.core.io.FileSystemResource;
 import java.io.File;
@@ -64,17 +63,17 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition>
     }
     
     public PageDefinition load(final ResourceInfo si) throws Exception {
-        Resource springResource = null;
+        org.springframework.core.io.Resource springResource = null;
         if (!Environment.isWarDeployed()) {
             final String path = "file:./grails-app/zul" + si.path;
             springResource = this.grailsApplication.getMainContext().getResource(path);
             if (springResource != null && !springResource.exists()) {
                 final GrailsPluginManager pluginManager = (GrailsPluginManager)this.appCtx.getBean("pluginManager", (Class)GrailsPluginManager.class);
                 for (final GrailsPlugin p : pluginManager.getAllPlugins()) {
-                    final Object pluginDir = InvokerHelper.invokeStaticMethod((Class)GrailsPluginUtils.class, "getPluginDirForName", (Object)GrailsNameUtils.getScriptName(p.getName()));
+                    final org.grails.io.support.Resource pluginDir = p.getPluginDir();
                     if (pluginDir != null) {
                         final File file = (File)InvokerHelper.getProperty(pluginDir, "file");
-                        springResource = (Resource)new FileSystemResource(file.getAbsolutePath() + "/grails-app/zul" + si.path);
+                        springResource = new FileSystemResource(file.getAbsolutePath() + "/grails-app/zul" + si.path);
                         GrailsContentLoader.LOG.debug((Object)(">>> Try Resource ::: " + springResource));
                         if (springResource.exists()) {
                             break;
@@ -94,7 +93,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition>
         if (springResource != null) {
             GrailsContentLoader.LOG.debug((Object)("Load from Spring Resource: " + springResource));
             try {
-                return this.parse(si.path, springResource, si.extra);
+                return this.parse(si.path, (File) springResource, si.extra);
             }
             catch (Throwable e) {
                 GrailsContentLoader.LOG.debug((Object)"Cannot parse ZUL from a Spring Resource", e);
