@@ -1,13 +1,8 @@
-// 
-// Decompiled by Procyon v0.6-prerelease
-// 
-
 package org.zkoss.zk.grails.ui;
 
 import org.zkoss.zk.fn.ZkFns;
 
-public class Versions
-{
+public class Versions {
     private static String ZK6_VERSION;
     private static String ZK7_VERSION;
     

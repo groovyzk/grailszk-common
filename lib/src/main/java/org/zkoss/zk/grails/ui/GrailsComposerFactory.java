@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.6-prerelease
-// 
-
 package org.zkoss.zk.grails.ui;
 
 import grails.core.GrailsApplication;
@@ -13,28 +9,29 @@ import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.http.SimpleUiFactory;
 
-public class GrailsComposerFactory extends SimpleUiFactory
-{
+public class GrailsComposerFactory extends SimpleUiFactory {
     public Composer<?> newComposer(final Page page, final Class klass) {
         Versions.versionValidator();
-        return (Composer<?>)super.newComposer(page, klass);
+        return (Composer<?>) super.newComposer(page, klass);
     }
     
     public Composer<?> newComposer(final Page page, String className) throws ClassNotFoundException {
         Versions.versionValidator();
         final ServletContext servletContext = page.getDesktop().getWebApp().getServletContext();
-        final ApplicationContext ctx = (ApplicationContext)WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-        final GrailsApplication grailsApplication = (GrailsApplication)ctx.getBean("grailsApplication");
+        final ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+        final GrailsApplication grailsApplication = (GrailsApplication) ctx.getBean("grailsApplication");
         final ApplicationContext mainContext = grailsApplication.getMainContext();
         final String[] result = className.split("\\.");
         final String classNamePart = result[result.length - 1];
+
         if (Character.isUpperCase(classNamePart.charAt(0))) {
             result[result.length - 1] = StringUtils.uncapitalize(classNamePart);
-            className = StringUtils.join((Object[])result, ".");
+            className = StringUtils.join(result, ".");
         }
+
         if (mainContext.containsBean(className)) {
-            return (Composer<?>)mainContext.getBean(className);
+            return (Composer<?>) mainContext.getBean(className);
         }
-        return (Composer<?>)super.newComposer(page, className);
+        return (Composer<?>) super.newComposer(page, className);
     }
 }

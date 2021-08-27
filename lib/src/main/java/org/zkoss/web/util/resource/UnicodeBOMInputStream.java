@@ -1,15 +1,10 @@
-// 
-// Decompiled by Procyon v0.6-prerelease
-// 
-
 package org.zkoss.web.util.resource;
 
 import java.io.IOException;
 import java.io.PushbackInputStream;
 import java.io.InputStream;
 
-public class UnicodeBOMInputStream extends InputStream
-{
+public class UnicodeBOMInputStream extends InputStream {
     private final PushbackInputStream in;
     private final BOM bom;
     private boolean skipped;
@@ -116,8 +111,7 @@ public class UnicodeBOMInputStream extends InputStream
         return this.in.markSupported();
     }
     
-    public static final class BOM
-    {
+    public static final class BOM {
         public static final BOM NONE;
         public static final BOM UTF_8;
         public static final BOM UTF_16_LE;
