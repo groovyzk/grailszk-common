@@ -4,9 +4,14 @@
 
 package org.zkoss.web.util.resource;
 
+import grails.core.GrailsApplication;
+import grails.plugins.GrailsPlugin;
+import grails.plugins.GrailsPluginManager;
 import org.apache.commons.logging.LogFactory;
 import java.io.FileInputStream;
 import java.net.URL;
+import org.grails.core.io.DefaultResourceLocator;
+import org.grails.gsp.GroovyPagesTemplateEngine;
 import org.zkoss.web.servlet.Servlets;
 import java.io.Reader;
 import java.io.InputStreamReader;
@@ -22,25 +27,19 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.springframework.core.io.ByteArrayResource;
 import java.io.BufferedInputStream;
-import org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine;
 import java.io.StringReader;
 import java.io.InputStream;
 import java.util.Map;
 import java.net.URI;
-import org.codehaus.groovy.grails.plugins.GrailsPlugin;
 import org.springframework.core.io.Resource;
 import java.io.FileNotFoundException;
 import org.springframework.core.io.FileSystemResource;
 import java.io.File;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import grails.util.GrailsNameUtils;
-import org.codehaus.groovy.grails.plugins.GrailsPluginUtils;
-import org.codehaus.groovy.grails.plugins.GrailsPluginManager;
 import grails.util.Environment;
 import org.springframework.web.context.WebApplicationContext;
-import org.codehaus.groovy.grails.core.io.DefaultResourceLocator;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.context.ApplicationContext;
 import org.zkoss.zk.ui.WebApp;
 import org.apache.commons.logging.Log;
@@ -61,7 +60,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition>
         this.webApp = wapp;
         final WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(wapp.getServletContext());
         this.grailsApplication = (GrailsApplication)ctx.getBean("grailsApplication", (Class)GrailsApplication.class);
-        (this.appCtx = this.grailsApplication.getMainContext()).getBean("grailsResourceLocator", (Class)DefaultResourceLocator.class);
+        (this.appCtx = this.grailsApplication.getMainContext()).getBean("grailsResourceLocator", (Class) DefaultResourceLocator.class);
     }
     
     public PageDefinition load(final ResourceInfo si) throws Exception {

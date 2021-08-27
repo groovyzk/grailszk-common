@@ -4,10 +4,10 @@
 
 package org.zkoss.zk.grails.ui;
 
+import grails.core.GrailsApplication;
 import org.springframework.context.ApplicationContext;
 import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.Page;

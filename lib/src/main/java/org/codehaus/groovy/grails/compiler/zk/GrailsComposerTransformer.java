@@ -1,15 +1,11 @@
-// 
-// Decompiled by Procyon v0.6-prerelease
-// 
-
 package org.codehaus.groovy.grails.compiler.zk;
 
+import org.grails.compiler.injection.AbstractGrailsArtefactTransformer;
 import org.zkoss.zk.grails.api.AbstractComposersApi;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.SourceUnit;
 import java.net.URL;
 import java.util.regex.Pattern;
-import org.codehaus.groovy.grails.compiler.injection.AbstractGrailsArtefactTransformer;
 
 public class GrailsComposerTransformer extends AbstractGrailsArtefactTransformer
 {
