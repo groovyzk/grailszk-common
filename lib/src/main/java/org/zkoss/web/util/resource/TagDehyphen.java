@@ -3,6 +3,9 @@ package org.zkoss.web.util.resource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Maicon Mauricio
+ */
 public class TagDehyphen {
     private static final Pattern TAG_PATTERN = Pattern.compile("((</?)(\\w+:?)?([\\w-]+)(/?>))");
 

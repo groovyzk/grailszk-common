@@ -32,7 +32,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
     private static final String UTF_8_ENCODING = "UTF-8";
     private static final String CONFIG_OPTION_GSP_ENCODING = "grails.views.gsp.encoding";
     private static final String CONFIG_ZKGRAILS_TAGLIB_DISABLE = "grails.zk.taglib.disabled";
-    private static final Log LOG = LogFactory.getLog(GrailsContentLoader.class);
+    private static final Log log = LogFactory.getLog(GrailsContentLoader.class);
     private final WebApp webApp;
     private final ApplicationContext appCtx;
     private final GrailsApplication grailsApplication;
@@ -53,21 +53,21 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
             springResource = grailsApplication.getMainContext().getResource(path);
             if (!springResource.exists()) {
                 final GrailsPluginManager pluginManager = appCtx.getBean("pluginManager", GrailsPluginManager.class);
-                for (final GrailsPlugin p : pluginManager.getAllPlugins()) {
-                    final org.grails.io.support.Resource pluginDir = p.getPluginDir();
+                for (final GrailsPlugin plugin : pluginManager.getAllPlugins()) {
+                    final org.grails.io.support.Resource pluginDir = plugin.getPluginDir();
                     if (pluginDir != null) {
                         final File file = pluginDir.getFile();
                         springResource = new FileSystemResource(file.getAbsolutePath() + "/grails-app/zul" + si.path);
-                        GrailsContentLoader.LOG.debug(">>> Try Resource ::: " + springResource);
+                        log.debug(">>> Try Resource ::: " + springResource);
                         if (springResource.exists()) {
                             break;
                         }
                         springResource = null;
-                        GrailsContentLoader.LOG.debug("NOT found ::: " + springResource);
+                        log.debug("NOT found ::: " + springResource);
                     }
                 }
             }
-            GrailsContentLoader.LOG.debug("Get Spring Resource from: " + springResource);
+            log.debug("Get Spring Resource from: " + springResource);
         }
         else {
             final URI uri = new File(((ServletContextLocator)si.extra)
@@ -75,27 +75,27 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
                                 .getRealPath("WEB-INF") + "/grails-app/zul" + si.path)
                                 .toURI();
             springResource = grailsApplication.getMainContext().getResource(uri.toString());
-            GrailsContentLoader.LOG.debug("Get Spring Resource in WAR mode from: " + uri.toString());
+            log.debug("Get Spring Resource in WAR mode from: " + uri.toString());
         }
         if (springResource != null) {
-            GrailsContentLoader.LOG.debug("Load from Spring Resource: " + springResource);
+            log.debug("Load from Spring Resource: " + springResource);
             try {
-                return parse(si.path, (File) springResource, si.extra);
+                return parse(si.path, springResource, si.extra);
             }
             catch (Throwable e) {
-                GrailsContentLoader.LOG.debug("Cannot parse ZUL from a Spring Resource", e);
+                log.debug("Cannot parse ZUL from a Spring Resource", e);
             }
         }
         if (si.url != null) {
-            GrailsContentLoader.LOG.debug("Load from URL: " + si.url);
+            log.debug("Load from URL: " + si.url);
             return parse(si.path, si.url, si.extra);
         }
         if (!si.file.exists()) {
-            GrailsContentLoader.LOG.debug("File " + si.file + " not found");
+            log.debug("File " + si.file + " not found");
             return null;
         }
         try {
-            GrailsContentLoader.LOG.debug("Load from File: " + si.file);
+            log.debug("Load from File: " + si.file);
             return parse(si.path, si.file, si.extra);
         }
         catch (FileNotFoundException ex) {
@@ -105,13 +105,13 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
     
     private StringReader preprocessGSP(final Map<?, ?> config, final long length, final InputStream in)
             throws IOException {
-        GrailsContentLoader.LOG.debug("Enter :: preprocessGSP");
+        log.debug("Enter :: preprocessGSP");
         final GroovyPagesTemplateEngine gsp = (GroovyPagesTemplateEngine) appCtx.getBean(GROOVY_PAGES_TEMPLATE_ENGINE);
-        GrailsContentLoader.LOG.debug("Got GSP Template bean: " + gsp);
+        log.debug("Got GSP Template bean: " + gsp);
         byte[] buffer = null;
         final UnicodeBOMInputStream ubomIn = new UnicodeBOMInputStream(in);
         if (ubomIn.getBOM() != UnicodeBOMInputStream.BOM.NONE) {
-            GrailsContentLoader.LOG.debug("BOM detected");
+            log.debug("BOM detected");
             ubomIn.skipBOM();
             buffer = new byte[(int)length - ubomIn.getBOM().getBytes().length];
         }
@@ -133,7 +133,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
         w.writeTo(new PrintWriter(sw));
         final String zulSrc = sw.toString().replaceAll("\\#\\{", "\\$\\{");
         final StringReader reader = new StringReader(zulSrc);
-        GrailsContentLoader.LOG.debug("Returning pre-processed ::: " + reader);
+        log.debug("Returning pre-processed ::: " + reader);
         return reader;
     }
     
