@@ -6,9 +6,6 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-String grailsVersion = "4.0.11"
-String zkVersion = "7.0.1"
-
 dependencies {
     compile "org.grails:grails-dependencies:$grailsVersion"
     compile "org.grails:grails-core"
