@@ -45,7 +45,8 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
         appCtx = grailsApplication.getMainContext();
         appCtx.getBean("grailsResourceLocator", DefaultResourceLocator.class);
     }
-    
+
+    @Override
     public PageDefinition load(final ResourceInfo si) throws Exception {
         org.springframework.core.io.Resource springResource;
         if (!Environment.isWarDeployed()) {
@@ -84,6 +85,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
             }
             catch (Throwable e) {
                 log.debug("Cannot parse ZUL from a Spring Resource", e);
+                throw (Exception) e;
             }
         }
         if (si.url != null) {
@@ -108,7 +110,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
         log.debug("Enter :: preprocessGSP");
         final GroovyPagesTemplateEngine gsp = (GroovyPagesTemplateEngine) appCtx.getBean(GROOVY_PAGES_TEMPLATE_ENGINE);
         log.debug("Got GSP Template bean: " + gsp);
-        byte[] buffer = null;
+        byte[] buffer;
         final UnicodeBOMInputStream ubomIn = new UnicodeBOMInputStream(in);
         if (ubomIn.getBOM() != UnicodeBOMInputStream.BOM.NONE) {
             log.debug("BOM detected");
@@ -136,7 +138,7 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
         log.debug("Returning pre-processed ::: " + reader);
         return reader;
     }
-    
+
     private PageDefinition parse(final String path, final org.springframework.core.io.Resource resource,
                                  final Object extra) throws Throwable {
         final Map<?, ?> config = grailsApplication.getConfig().flatten();
@@ -150,12 +152,14 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
         pgdef.setRequestPath(path);
         return pgdef;
     }
-    
+
+    @Override
     protected PageDefinition parse(final String path, final URL url, final Object extra) throws Exception {
         final Locator locator = (Locator)((extra != null) ? extra : PageDefinitions.getLocator(webApp, path));
         return new Parser(webApp, locator).parse(url, path);
     }
-    
+
+    @Override
     protected PageDefinition parse(final String path, final File file, final Object extra) throws Exception {
         final GrailsApplication grailsApplication = (GrailsApplication) appCtx.getBean("grailsApplication");
         final Map<?, ?> config = grailsApplication.getConfig().flatten();
