@@ -9,9 +9,12 @@ import groovy.text.Template;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.grails.core.io.DefaultResourceLocator;
+import org.grails.core.io.SpringResource;
 import org.grails.gsp.GroovyPagesTemplateEngine;
+import org.grails.plugins.BinaryGrailsPlugin;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -52,23 +55,19 @@ public class GrailsContentLoader extends ResourceLoader<PageDefinition> {
         if (!Environment.isWarDeployed()) {
             final String path = "file:./grails-app/zul" + si.path;
             springResource = grailsApplication.getMainContext().getResource(path);
-            if (!springResource.exists()) {
-                final GrailsPluginManager pluginManager = appCtx.getBean("pluginManager", GrailsPluginManager.class);
-                for (final GrailsPlugin plugin : pluginManager.getAllPlugins()) {
-                    final org.grails.io.support.Resource pluginDir = plugin.getPluginDir();
-                    if (pluginDir != null) {
-                        final File file = pluginDir.getFile();
-                        springResource = new FileSystemResource(file.getAbsolutePath() + "/grails-app/zul" + si.path);
-                        log.debug(">>> Try Resource ::: " + springResource);
-                        if (springResource.exists()) {
-                            break;
-                        }
-                        springResource = null;
-                        log.debug("NOT found ::: " + springResource);
-                    }
+            log.debug(">>> Try Resource ::: " + springResource);
+            if (!springResource.exists()) { // .zul file might be in a subproject or plugin
+                springResource = new ClassPathResource(path.replace("file:./grails-app/", ""));
+                log.debug(">>> Try to find Resource on classpath::: " + springResource);
+                if (!springResource.exists()) {
+                    log.debug("NOT found ::: " + springResource);
+                    springResource = null;
                 }
             }
-            log.debug("Get Spring Resource from: " + springResource);
+
+            if (springResource != null) {
+                log.debug("Get Spring Resource from: " + springResource);
+            }
         }
         else {
             final URI uri = new File(((ServletContextLocator)si.extra)
