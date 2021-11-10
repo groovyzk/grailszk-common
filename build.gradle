@@ -7,7 +7,10 @@ dependencies {
     compile "org.zkoss.zk:zhtml:$zkVersion"
     compile "org.zkoss.zk:zkplus:$zkVersion"
     compile "org.zkoss.zk:zkbind:$zkVersion"
-    compile "org.zkoss.common:zweb:$zkVersion"
+    compile ("org.zkoss.common:zweb:$zkVersion") {
+        transitive = true
+        exclude module: "ResourceCaches"
+    }
     compile "org.zkoss.common:zel:$zkVersion"
     compile "org.zkoss.common:zcommon:$zkVersion"
 }
