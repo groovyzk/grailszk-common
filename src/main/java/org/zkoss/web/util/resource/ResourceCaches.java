@@ -32,14 +32,14 @@ import static org.springframework.web.context.support.WebApplicationContextUtils
 
 /**
  * Utilities to load (and parse) the Servlet resource.
- * Notice that {@link ResourceCache} and {@link ResourceUtils}
+ * Notice that {@link ResourceCache} and {@link ResourceLoader}
  * must be used rather than
  * {@link org.zkoss.util.resource.ResourceCache}
  * and {@link org.zkoss.util.resource.Loader}.
  *
  * <p>Usage:
  * <ol>
- * <li>Implements a loader by extending from {@link ResourceUtils}.</li>
+ * <li>Implements a loader by extending from {@link ResourceLoader}.</li>
  * <li>Creates a resource cache ({@link ResourceCache})
  * by use of the loader in the previous step.</li>
  * <li>Invoke {@link #get} to load the resource.</li>
@@ -64,11 +64,11 @@ public class ResourceCaches {
      * in {@link ResourceCache}.
      *
      * @param cache the resource cache.
-     * Note: its loader must extend from {@link ResourceUtils}.
+     * Note: its loader must extend from {@link ResourceLoader}.
      * @param path the URI path
      * @param extra the extra parameter that will be passed to
-     * {@link ResourceUtils#parse(String,File,Object)} and
-     * {@link ResourceUtils#parse(String,URL,Object)}
+     * {@link ResourceLoader#parse(String,File,Object)} and
+     * {@link ResourceLoader#parse(String,URL,Object)}
      */
     public static final <V>
     V get(ResourceCache<V> cache, ServletContext ctx, String path, Object extra) {
