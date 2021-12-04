@@ -1,16 +1,16 @@
 dependencies {
-    compile "org.grails:grails-dependencies:$grailsVersion"
-    compile "org.grails:grails-core"
-    compile "org.grails.plugins:gsp"
-    compile "org.zkoss.zk:zk:$zkVersion"
-    compile "org.zkoss.zk:zul:$zkVersion"
-    compile "org.zkoss.zk:zhtml:$zkVersion"
-    compile "org.zkoss.zk:zkplus:$zkVersion"
-    compile "org.zkoss.zk:zkbind:$zkVersion"
-    compile ("org.zkoss.common:zweb:$zkVersion") {
+    api "org.grails:grails-dependencies:$grailsVersion"
+    api "org.grails:grails-core"
+    api "org.grails.plugins:gsp"
+    api "org.zkoss.zk:zk:$zkVersion"
+    api "org.zkoss.zk:zul:$zkVersion"
+    api "org.zkoss.zk:zhtml:$zkVersion"
+    api "org.zkoss.zk:zkplus:$zkVersion"
+    api "org.zkoss.zk:zkbind:$zkVersion"
+    api ("org.zkoss.common:zweb:$zkVersion") {
         transitive = true
         exclude module: "ResourceCaches"
     }
-    compile "org.zkoss.common:zel:$zkVersion"
-    compile "org.zkoss.common:zcommon:$zkVersion"
+    api "org.zkoss.common:zel:$zkVersion"
+    api "org.zkoss.common:zcommon:$zkVersion"
 }
